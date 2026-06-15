@@ -5,10 +5,21 @@ import { Hotel } from '@/lib/types';
 import StarRating from './StarRating';
 import FacilitiesList from './FacilitiesList';
 
-export default function HotelCard({ hotel }: { hotel: Hotel }) {
+interface HotelCardProps {
+  hotel: Hotel;
+  checkIn?: string;
+  checkOut?: string;
+}
+
+export default function HotelCard({ hotel, checkIn, checkOut }: HotelCardProps) {
+  const params = new URLSearchParams();
+  if (checkIn) params.set('checkIn', checkIn);
+  if (checkOut) params.set('checkOut', checkOut);
+  const query = params.toString();
+
   return (
     <Link
-      href={`/hotels/${hotel.id}`}
+      href={`/hotels/${hotel.id}${query ? `?${query}` : ''}`}
       className="flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition hover:shadow-lg sm:flex-row"
     >
       <div className="relative h-48 w-full shrink-0 sm:h-auto sm:w-64">

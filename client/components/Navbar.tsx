@@ -32,10 +32,10 @@ export default function Navbar() {
               <Link href="/bookings" className="hover:underline">
                 Minhas reservas
               </Link>
-              <span className="hidden items-center gap-1 sm:flex">
+              <Link href="/profile" className="hidden items-center gap-1 hover:underline sm:flex">
                 <FaUserCircle />
                 {user.name}
-              </span>
+              </Link>
               <button
                 onClick={handleLogout}
                 className="rounded-md bg-primary-700 px-3 py-1.5 hover:bg-primary-500"

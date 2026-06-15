@@ -120,7 +120,7 @@ function SearchPageContent() {
               <p className="mb-3 text-sm text-gray-500">{total} hotéis encontrados</p>
               <div className="grid gap-4">
                 {hotels.map((hotel) => (
-                  <HotelCard key={hotel.id} hotel={hotel} />
+                  <HotelCard key={hotel.id} hotel={hotel} checkIn={checkIn} checkOut={checkOut} />
                 ))}
               </div>
 

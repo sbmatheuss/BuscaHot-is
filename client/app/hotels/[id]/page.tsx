@@ -9,6 +9,7 @@ import { Hotel } from '@/lib/types';
 import StarRating from '@/components/StarRating';
 import FacilitiesList from '@/components/FacilitiesList';
 import BookingForm from '@/components/BookingForm';
+import ReviewSection from '@/components/ReviewSection';
 
 function HotelDetailsContent() {
   const params = useParams<{ id: string }>();
@@ -100,6 +101,8 @@ function HotelDetailsContent() {
           <BookingForm hotel={hotel} />
         </div>
       </div>
+
+      <ReviewSection hotelId={hotel.id} hotelName={hotel.name} />
     </div>
   );
 }

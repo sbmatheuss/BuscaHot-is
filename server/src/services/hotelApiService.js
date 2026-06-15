@@ -172,6 +172,8 @@ const getHotelById = async (id, { checkIn, checkOut } = {}) => {
 
     const images = hotel.photoUrls || hotel.photos?.map((p) => p?.url_max || p?.url_original) || [];
 
+    const mainImage = images[0] || (await searchImage(`${hotel.hotel_name || hotel.name} hotel`)) || null;
+
     return {
       id: String(hotel.hotel_id ?? id),
       name: hotel.hotel_name || hotel.name || 'Hotel',
@@ -181,8 +183,8 @@ const getHotelById = async (id, { checkIn, checkOut } = {}) => {
       currency: grossPrice?.currency || 'BRL',
       rating: hotel.review_score ? Number(hotel.review_score) : null,
       reviewCount: hotel.review_nr || 0,
-      image: images[0] || null,
-      images,
+      image: mainImage,
+      images: images.length ? images : mainImage ? [mainImage] : [],
       description: hotel.hotel_description || hotel.description || '',
       facilities: normalizeFacilitiesFromList(facilityNames),
     };

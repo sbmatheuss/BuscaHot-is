@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FaGoogle } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
 function RegisterForm() {
   const { register } = useAuth();
   const router = useRouter();
@@ -16,8 +18,15 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(
+    searchParams.get('error') === 'google' ? 'Não foi possível entrar com Google. Tente novamente.' : ''
+  );
   const [loading, setLoading] = useState(false);
+
+  const handleGoogleLogin = () => {
+    sessionStorage.setItem('oauth_redirect', redirect);
+    window.location.href = `${API_URL}/auth/google`;
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -116,11 +125,10 @@ function RegisterForm() {
 
         <button
           type="button"
-          disabled
-          title="Cadastro com Google em breve"
-          className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border py-2 font-medium text-gray-400"
+          onClick={handleGoogleLogin}
+          className="flex w-full items-center justify-center gap-2 rounded-md border py-2 font-medium text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          <FaGoogle /> Continuar com Google (em breve)
+          <FaGoogle className="text-red-500" /> Continuar com Google
         </button>
 
         <p className="mt-6 text-center text-sm text-gray-500">

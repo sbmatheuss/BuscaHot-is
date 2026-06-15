@@ -10,6 +10,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  loginWithToken: (token: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -52,6 +53,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     persistSession(data);
   };
 
+  const loginWithToken = async (newToken: string) => {
+    const { data } = await api.get('/auth/me', {
+      headers: { Authorization: `Bearer ${newToken}` },
+    });
+    persistSession({ ...data, token: newToken });
+  };
+
   const logout = () => {
     localStorage.removeItem(STORAGE_TOKEN_KEY);
     localStorage.removeItem(STORAGE_USER_KEY);
@@ -60,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );
