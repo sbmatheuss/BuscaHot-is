@@ -9,6 +9,8 @@ node_modules/
 # Next.js
 client/.next/
 client/out/
+client/next-env.d.ts
+client/.vercel/
 
 # Build output
 dist/
