@@ -80,7 +80,7 @@ function SearchPageContent() {
 
   return (
     <div className="container-page py-6">
-      <div className="mb-6">
+      <div className="mb-6 rounded-xl bg-brand-600 p-4">
         <SearchBar
           initialDestination={destination}
           initialCheckIn={checkIn}
@@ -101,23 +101,29 @@ function SearchPageContent() {
 
         <div className="flex-1">
           {destination && (
-            <h1 className="mb-4 text-xl font-semibold text-gray-800">
-              Hotéis em {destination}
+            <h1 className="mb-4 text-xl font-extrabold text-gray-900">
+              Hotéis em <span className="text-brand-600">{destination}</span>
             </h1>
           )}
 
-          {loading && <p className="text-gray-500">Buscando hotéis...</p>}
-          {error && <p className="text-red-600">{error}</p>}
+          {loading && (
+            <div className="flex items-center gap-3 py-8 text-gray-400">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+              Buscando hotéis...
+            </div>
+          )}
+          {error && <div className="card p-5 text-red-600">{error}</div>}
 
           {!loading && !error && hotels.length === 0 && (
-            <p className="rounded-xl border bg-white p-6 text-gray-500 shadow-sm">
-              Nenhum hotel encontrado com esses filtros. Tente ajustar a busca.
-            </p>
+            <div className="card p-8 text-center text-gray-500">
+              <p className="text-lg font-semibold text-gray-700">Nenhum hotel encontrado</p>
+              <p className="mt-1 text-sm">Tente ajustar os filtros ou buscar outro destino.</p>
+            </div>
           )}
 
           {!loading && hotels.length > 0 && (
             <>
-              <p className="mb-3 text-sm text-gray-500">{total} hotéis encontrados</p>
+              <p className="mb-3 text-sm font-medium text-gray-500"><span className="font-bold text-gray-800">{total}</span> hotéis encontrados</p>
               <div className="grid gap-4">
                 {hotels.map((hotel) => (
                   <HotelCard key={hotel.id} hotel={hotel} checkIn={checkIn} checkOut={checkOut} />
@@ -129,19 +135,19 @@ function SearchPageContent() {
                   <button
                     disabled={page <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="rounded-md border bg-white px-3 py-1.5 text-sm disabled:opacity-50"
+                    className="rounded-md border bg-white px-4 py-2 text-sm font-semibold text-brand-600 hover:bg-brand-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
-                    Anterior
+                    ← Anterior
                   </button>
-                  <span className="text-sm text-gray-600">
-                    Página {page} de {pages}
+                  <span className="text-sm font-medium text-gray-600">
+                    {page} / {pages}
                   </span>
                   <button
                     disabled={page >= pages}
                     onClick={() => setPage((p) => Math.min(pages, p + 1))}
-                    className="rounded-md border bg-white px-3 py-1.5 text-sm disabled:opacity-50"
+                    className="rounded-md border bg-white px-4 py-2 text-sm font-semibold text-brand-600 hover:bg-brand-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
-                    Próxima
+                    Próxima →
                   </button>
                 </div>
               )}

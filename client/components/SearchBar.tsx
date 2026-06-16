@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaSearch } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaCalendarAlt, FaUser, FaSearch } from 'react-icons/fa';
 
 interface SearchBarProps {
   initialDestination?: string;
@@ -14,15 +14,10 @@ interface SearchBarProps {
 const toISODate = (date: Date) => date.toISOString().split('T')[0];
 
 const defaultCheckIn = () => {
-  const date = new Date();
-  date.setDate(date.getDate() + 7);
-  return toISODate(date);
+  const d = new Date(); d.setDate(d.getDate() + 7); return toISODate(d);
 };
-
 const defaultCheckOut = () => {
-  const date = new Date();
-  date.setDate(date.getDate() + 9);
-  return toISODate(date);
+  const d = new Date(); d.setDate(d.getDate() + 9); return toISODate(d);
 };
 
 export default function SearchBar({
@@ -33,75 +28,77 @@ export default function SearchBar({
 }: SearchBarProps) {
   const router = useRouter();
   const [destination, setDestination] = useState(initialDestination);
-  const [checkIn, setCheckIn] = useState(initialCheckIn || defaultCheckIn());
+  const [checkIn, setCheckIn]   = useState(initialCheckIn  || defaultCheckIn());
   const [checkOut, setCheckOut] = useState(initialCheckOut || defaultCheckOut());
-  const [adults, setAdults] = useState(initialAdults);
+  const [adults, setAdults]     = useState(initialAdults);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams({
-      destination,
-      checkIn,
-      checkOut,
-      adults,
-    });
-    router.push(`/search?${params.toString()}`);
+    router.push(`/search?${new URLSearchParams({ destination, checkIn, checkOut, adults })}`);
   };
+
+  const fieldClass =
+    'w-full bg-white rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid w-full gap-3 rounded-xl bg-white p-4 shadow-lg sm:grid-cols-2 lg:grid-cols-5"
+      className="grid w-full gap-2 rounded-xl bg-accent-500 p-2 shadow-xl sm:grid-cols-2 lg:grid-cols-9"
     >
-      <div className="lg:col-span-2">
-        <label className="mb-1 block text-xs font-semibold text-gray-500">Destino</label>
+      {/* Destino */}
+      <div className="relative lg:col-span-3">
+        <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
         <input
           type="text"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
           placeholder="Para onde você vai?"
-          className="w-full rounded-md border px-3 py-2 text-gray-800 focus:border-primary-500 focus:outline-none"
+          className={`${fieldClass} pl-8`}
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-500">Check-in</label>
+      {/* Check-in */}
+      <div className="relative lg:col-span-2">
+        <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none" />
         <input
           type="date"
           value={checkIn}
           onChange={(e) => setCheckIn(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 text-gray-800 focus:border-primary-500 focus:outline-none"
+          className={`${fieldClass} pl-8`}
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-500">Check-out</label>
+      {/* Check-out */}
+      <div className="relative lg:col-span-2">
+        <FaCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none" />
         <input
           type="date"
           value={checkOut}
           onChange={(e) => setCheckOut(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 text-gray-800 focus:border-primary-500 focus:outline-none"
+          className={`${fieldClass} pl-8`}
         />
       </div>
 
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <label className="mb-1 block text-xs font-semibold text-gray-500">Hóspedes</label>
-          <input
-            type="number"
-            min={1}
-            value={adults}
-            onChange={(e) => setAdults(e.target.value)}
-            className="w-full rounded-md border px-3 py-2 text-gray-800 focus:border-primary-500 focus:outline-none"
-          />
-        </div>
-        <button
-          type="submit"
-          className="mt-auto flex h-[42px] items-center gap-2 rounded-md bg-primary-600 px-4 font-semibold text-white hover:bg-primary-700"
-        >
-          <FaSearch /> Buscar
-        </button>
+      {/* Hóspedes */}
+      <div className="relative lg:col-span-1">
+        <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none" />
+        <input
+          type="number"
+          min={1}
+          value={adults}
+          onChange={(e) => setAdults(e.target.value)}
+          className={`${fieldClass} pl-8`}
+        />
       </div>
+
+      {/* Botão */}
+      <button
+        type="submit"
+        className="lg:col-span-1 flex items-center justify-center gap-2 rounded-md bg-brand-600 px-4 py-2.5 font-bold text-white hover:bg-brand-700 transition-colors text-sm"
+      >
+        <FaSearch />
+        <span className="lg:hidden">Buscar</span>
+      </button>
     </form>
   );
 }

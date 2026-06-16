@@ -1,20 +1,14 @@
 'use client';
 
-import {
-  FaSwimmingPool,
-  FaParking,
-  FaSnowflake,
-  FaWifi,
-  FaCoffee,
-} from 'react-icons/fa';
+import { FaSwimmingPool, FaParking, FaSnowflake, FaWifi, FaCoffee } from 'react-icons/fa';
 import { SearchFilters } from '@/lib/types';
 
 const FILTER_OPTIONS: { key: keyof SearchFilters; label: string; icon: React.ReactNode }[] = [
-  { key: 'pool', label: 'Piscina', icon: <FaSwimmingPool /> },
-  { key: 'parking', label: 'Estacionamento', icon: <FaParking /> },
-  { key: 'ac', label: 'Ar-condicionado', icon: <FaSnowflake /> },
-  { key: 'wifi', label: 'Wi-Fi', icon: <FaWifi /> },
-  { key: 'breakfast', label: 'Café da manhã', icon: <FaCoffee /> },
+  { key: 'pool',      label: 'Piscina',           icon: <FaSwimmingPool className="text-brand-500" /> },
+  { key: 'parking',   label: 'Estacionamento',     icon: <FaParking className="text-brand-500" /> },
+  { key: 'ac',        label: 'Ar-condicionado',    icon: <FaSnowflake className="text-brand-500" /> },
+  { key: 'wifi',      label: 'Wi-Fi grátis',       icon: <FaWifi className="text-brand-500" /> },
+  { key: 'breakfast', label: 'Café da manhã',      icon: <FaCoffee className="text-brand-500" /> },
 ];
 
 interface FilterSidebarProps {
@@ -27,50 +21,71 @@ interface FilterSidebarProps {
 }
 
 export default function FilterSidebar({
-  filters,
-  maxPrice,
-  sortBy,
-  onFilterChange,
-  onMaxPriceChange,
-  onSortByChange,
+  filters, maxPrice, sortBy,
+  onFilterChange, onMaxPriceChange, onSortByChange,
 }: FilterSidebarProps) {
   return (
-    <aside className="w-full shrink-0 rounded-xl border bg-white p-4 shadow-sm lg:w-64">
-      <h3 className="mb-3 font-semibold text-gray-800">Ordenar por</h3>
-      <select
-        value={sortBy}
-        onChange={(e) => onSortByChange(e.target.value as 'price' | 'rating')}
-        className="mb-4 w-full rounded-md border px-3 py-2 text-sm text-gray-700"
-      >
-        <option value="price">Mais econômicos</option>
-        <option value="rating">Melhor avaliados</option>
-      </select>
-
-      <h3 className="mb-3 font-semibold text-gray-800">Comodidades</h3>
-      <div className="flex flex-col gap-2">
-        {FILTER_OPTIONS.map((option) => (
-          <label key={option.key} className="flex items-center gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              checked={filters[option.key]}
-              onChange={(e) => onFilterChange(option.key, e.target.checked)}
-              className="h-4 w-4 accent-primary-600"
-            />
-            {option.icon}
-            {option.label}
-          </label>
-        ))}
+    <aside className="w-full shrink-0 lg:w-60">
+      {/* Sort */}
+      <div className="card mb-3 p-4">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">Ordenar por</h3>
+        <div className="flex flex-col gap-2">
+          {(['price', 'rating'] as const).map((v) => (
+            <label
+              key={v}
+              className={`flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors
+                ${sortBy === v ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-600 hover:border-brand-300'}`}
+            >
+              <input
+                type="radio"
+                className="accent-brand-500"
+                checked={sortBy === v}
+                onChange={() => onSortByChange(v)}
+              />
+              {v === 'price' ? 'Mais econômicos' : 'Melhor avaliados'}
+            </label>
+          ))}
+        </div>
       </div>
 
-      <h3 className="mb-2 mt-4 font-semibold text-gray-800">Preço máximo (por noite)</h3>
-      <input
-        type="number"
-        min={0}
-        placeholder="Ex: 250"
-        value={maxPrice}
-        onChange={(e) => onMaxPriceChange(e.target.value)}
-        className="w-full rounded-md border px-3 py-2 text-sm text-gray-700"
-      />
+      {/* Facilities */}
+      <div className="card mb-3 p-4">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">Comodidades</h3>
+        <div className="flex flex-col gap-2.5">
+          {FILTER_OPTIONS.map((opt) => (
+            <label
+              key={opt.key}
+              className={`flex cursor-pointer items-center gap-3 rounded-md border px-3 py-2 text-sm font-medium transition-colors
+                ${filters[opt.key] ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-gray-200 text-gray-600 hover:border-brand-300'}`}
+            >
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-brand-500"
+                checked={filters[opt.key]}
+                onChange={(e) => onFilterChange(opt.key, e.target.checked)}
+              />
+              {opt.icon}
+              {opt.label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Max price */}
+      <div className="card p-4">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">Preço máximo / noite</h3>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">R$</span>
+          <input
+            type="number"
+            min={0}
+            placeholder="Qualquer preço"
+            value={maxPrice}
+            onChange={(e) => onMaxPriceChange(e.target.value)}
+            className="w-full rounded-md border border-gray-300 py-2.5 pl-9 pr-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          />
+        </div>
+      </div>
     </aside>
   );
 }

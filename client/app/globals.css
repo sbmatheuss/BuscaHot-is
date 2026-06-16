@@ -1,16 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  color: #1f2937;
+@layer base {
+  html, body {
+    color: #262626;
+    background-color: #F2F2F2;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+  }
 }
 
-.container-page {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+@layer components {
+  .container-page {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .btn-primary {
+    @apply bg-accent-500 hover:bg-accent-600 text-brand-800 font-bold px-5 py-2.5 rounded-md transition-colors duration-150 text-sm;
+  }
+
+  .btn-blue {
+    @apply bg-brand-500 hover:bg-brand-600 text-white font-semibold px-5 py-2.5 rounded-md transition-colors duration-150 text-sm;
+  }
+
+  .input-field {
+    @apply w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400
+           focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 transition;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-card hover:shadow-card-hover transition-shadow duration-200;
+  }
+
+  .badge-rating {
+    @apply inline-flex items-center rounded-md bg-brand-600 px-2 py-0.5 text-sm font-bold text-white;
+  }
 }
